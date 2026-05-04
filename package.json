@@ -3,6 +3,17 @@
   "version": "0.1.0",
   "main": "index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/squatguard/mcp-squatguard-template.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "bin": {
     "mcp-squatguard-template": "./build_node/index.js"
   },

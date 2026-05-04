@@ -1,0 +1,90 @@
+name: NPM Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            version_bump:
+                description: "Version bump type (patch, minor, major)"
+                required: true
+                default: "patch"
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            id-token: write # required for npm trusted publishing (OIDC)
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  registry-url: "https://registry.npmjs.org"
+
+            - name: Upgrade npm
+              # Trusted publishing requires npm >= 11.5.1; Node 20/22 ship with older npm.
+              run: npm install -g npm@latest
+
+            - name: Get current version
+              id: current_version
+              run: |
+                  CURRENT_VERSION=$(node -p "require('./package.json').version")
+                  echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+                  echo "Current version: $CURRENT_VERSION"
+
+            - name: Configure git
+              run: |
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git config --local user.name "github-actions[bot]"
+
+            - name: Bump version
+              id: new_version
+              run: |
+                  # npm version updates package.json + package-lock.json, commits, and tags atomically.
+                  NEW_VERSION=$(npm version ${{ github.event.inputs.version_bump }} --message "chore: bump version to %s")
+                  NEW_VERSION="${NEW_VERSION#v}"  # strip leading 'v'
+                  echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+                  echo "New version: $NEW_VERSION"
+
+            - name: Push version bump and tag
+              run: |
+                  git push
+                  git push --tags
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build package
+              run: npm run build --if-present
+
+            - name: Publish to npm
+              # No NODE_AUTH_TOKEN — OIDC handles auth.
+              # Provenance is automatic with trusted publishing; no --provenance flag needed.
+              # Drop --access public if your package is unscoped or already published.
+              run: npm publish --access public
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: v${{ steps.new_version.outputs.version }}
+                  name: Release v${{ steps.new_version.outputs.version }}
+                  body: |
+                      ## Changes in v${{ steps.new_version.outputs.version }}
+
+                      This release was automatically created based on commits to the main branch.
+
+                      ### Version bump type: ${{ github.event.inputs.version_bump }}
+
+                      See the [commit history](https://github.com/${{ github.repository }}/compare/v${{ steps.current_version.outputs.version }}...v${{ steps.new_version.outputs.version }}) for detailed changes.
+                  draft: false
+                  prerelease: false
