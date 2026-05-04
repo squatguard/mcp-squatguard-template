@@ -1,0 +1,26 @@
+{
+  "name": "mcp-squatguard-template",
+  "version": "0.1.0",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "weather": "./build_node/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"require('fs').chmodSync('build_node/index.js', '755')\""
+  },
+  "files": [
+    "build_node"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "SquatGuard MCP Template for Python",
+  "devDependencies": {
+    "@types/node": "^22.19.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.3"
+  }
+}
