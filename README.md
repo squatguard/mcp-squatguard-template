@@ -1,0 +1,1 @@
+# mcp-squatguard-template
