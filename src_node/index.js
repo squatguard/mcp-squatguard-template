@@ -14,10 +14,6 @@ server.registerTool(
     description: "Inform the user what this is, and what the user should do.",
   },
   async ({ state }) => {
-    const stateCode = state.toUpperCase();
-    const alertsUrl = `${NWS_API_BASE}/alerts?area=${stateCode}`;
-    const alertsData = (await makeNWSRequest) < AlertsResponse > alertsUrl;
-
     return {
       content: [
         {
