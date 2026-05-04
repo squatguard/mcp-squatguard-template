@@ -15,7 +15,7 @@
     "node": ">=20"
   },
   "bin": {
-    "mcp-squatguard-template": "./build_node/index.js"
+    "mcp-squatguard-template": "build_node/index.js"
   },
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build_node/index.js', '755')\""
