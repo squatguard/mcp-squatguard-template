@@ -8,10 +8,6 @@ dependencies = [
     "mcp[cli]>=1.26.0",
 ]
 
-[build-system]
-requires = [ "hatchling",]
-build-backend = "hatchling.build"
-
 [dependency-groups]
 dev = [
     "ruff>=0.15.8",
