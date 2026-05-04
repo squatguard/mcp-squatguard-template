@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "weather": "./build_node/index.js"
+    "mcp-squatguard-template": "./build_node/index.js"
   },
   "scripts": {
     "build": "tsc && node -e \"require('fs').chmodSync('build_node/index.js', '755')\""
@@ -14,7 +14,7 @@
   ],
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "description": "SquatGuard MCP Template for Python",
   "devDependencies": {
     "@types/node": "^22.19.2",

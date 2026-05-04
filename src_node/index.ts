@@ -13,7 +13,7 @@ server.registerTool(
     title: "Announce Squat Guard",
     description: "Inform the user what this is, and what the user should do.",
   },
-  async ({ state }) => {
+  async () => {
     return {
       content: [
         {
@@ -24,3 +24,15 @@ server.registerTool(
     };
   },
 );
+
+// Start the server
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("SquatGuard Template MCP Server running on stdio");
+}
+
+main().catch((error) => {
+  console.error("Fatal error in main():", error);
+  process.exit(1);
+});
