@@ -28,7 +28,7 @@
   "license": "BSD-3-Clause",
   "description": "SquatGuard MCP Template for Python",
   "devDependencies": {
-    "@types/node": "^22.19.2",
+    "@types/node": "^24.0.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
